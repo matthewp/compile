@@ -35,6 +35,10 @@ if(cli.input.length === 0 || !outFormat) {
 async function run() {
   let bundle = await rollup.rollup({
     input: cli.input[0],
+    external: [
+      'url', 'http', 'util', 'https', 'zlib', 'stream',
+      'buffer', 'string_decoder'
+    ],
     plugins: [
       json(),
       nodeResolve({
@@ -48,7 +52,8 @@ async function run() {
 
   await bundle.write({
     format: outFormat,
-    file: cli.flags.out
+    file: cli.flags.out,
+    exports: 'named'
   });
 }
 
