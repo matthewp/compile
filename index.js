@@ -30,6 +30,7 @@ const outFormat = cli.flags.format || cli.flags.f;
 
 if(cli.input.length === 0 || !outFormat) {
   cli.showHelp();
+  return;
 }
 
 async function run() {
@@ -47,6 +48,7 @@ async function run() {
       }),
       commonjs({
       }),
+      http()
     ]
   });
 
@@ -55,6 +57,49 @@ async function run() {
     file: cli.flags.out,
     exports: 'named'
   });
+}
+
+function http() {
+  let urls = new Map();
+  let httpExp = /^https?:\/\//;
+
+  function load(url, isHttps) {
+    let http = require('follow-redirects')[isHttps ? 'https' : 'http'];
+
+    return new Promise(function(resolve, reject){
+      http.get(url, res => {
+        let body = '';
+        res.on('data', data => { body += data; });
+        res.on('end', () => {
+          resolve(body);
+        });
+      });
+    });
+  }
+
+  return {
+    resolveId(id) {
+      let match = httpExp.exec(id);
+      if(match) {
+        let record = {
+          isHttps: match[0] === 'https://',
+          url: id
+        };
+
+        let idx = id.lastIndexOf('/');
+        let pth = id.substr(idx + 1);
+        let newId = pth.split('.').shift();
+        urls.set(newId, record);
+        return newId;
+      }
+    },
+    load(id) {
+      if(urls.has(id)) {
+        let { url, isHttps } = urls.get(id);
+        return load(url, isHttps);
+      }
+    }
+  };
 }
 
 run();
