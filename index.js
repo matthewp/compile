@@ -5,13 +5,19 @@ const json = require('rollup-plugin-json');
 const rollup = require("rollup");
 const meow = require('meow');
 
+const nodeExternals = [
+  'url', 'http', 'util', 'https', 'zlib', 'stream',
+  'crypto', 'buffer', 'string_decoder'
+];
+
 const cli = meow(`
   Usage
     $ compile <input>
 
   Options
-    --out, -o Output file
-    --format, -f Format
+    --out,      -o Output file
+    --format,   -f Format
+    --external, -e Externals (comma separated)
 `, {
   flags: {
     format: {
@@ -34,12 +40,20 @@ if(cli.input.length === 0 || !outFormat) {
 }
 
 async function run() {
+  let externals = [];
+
+  if(outFormat === 'cjs') {
+    externals = Array.from(nodeExternals);
+  }
+
+  let externalList = cli.flags.external || cli.flags.e;
+  if(externalList) {
+    externals.push.apply(externals, externalList.split(','));
+  }
+
   let bundle = await rollup.rollup({
     input: cli.input[0],
-    external: [
-      'url', 'http', 'util', 'https', 'zlib', 'stream',
-      'buffer', 'string_decoder'
-    ],
+    external: externals,
     plugins: [
       json(),
       nodeResolve({

@@ -1,7 +1,5 @@
 const assert = require('assert');
-const path = require('path');
 const { run } = require('./helpers.js');
-
 
 describe('Modules that depend on web dependencies', function(){
   describe('https', function(){
