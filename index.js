@@ -7,7 +7,7 @@ const meow = require('meow');
 
 const nodeExternals = [
   'url', 'http', 'util', 'https', 'zlib', 'stream',
-  'crypto', 'buffer', 'string_decoder'
+  'crypto', 'buffer', 'string_decoder', 'querystring', 'punycode'
 ];
 
 const cli = meow(`
