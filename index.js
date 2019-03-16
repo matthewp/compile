@@ -6,8 +6,9 @@ const rollup = require("rollup");
 const meow = require('meow');
 
 const nodeExternals = [
-  'url', 'http', 'util', 'https', 'zlib', 'stream',
-  'crypto', 'buffer', 'string_decoder', 'querystring', 'punycode'
+  'url', 'http', 'util', 'https', 'zlib', 'stream', 'path',
+  'crypto', 'buffer', 'string_decoder', 'querystring', 'punycode',
+  'child_process', 'events'
 ];
 
 const cli = meow(`
@@ -41,8 +42,9 @@ if(cli.input.length === 0 || !outFormat) {
 
 async function run() {
   let externals = [];
+  let isBuiltForNode = outFormat === 'cjs';
 
-  if(outFormat === 'cjs') {
+  if(isBuiltForNode) {
     externals = Array.from(nodeExternals);
   }
 
