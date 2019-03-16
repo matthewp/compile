@@ -1,5 +1,7 @@
 #!/usr/bin/env node
+const builtins = require('rollup-plugin-node-builtins');
 const commonjs = require('rollup-plugin-commonjs');
+const globals = require('rollup-plugin-node-globals');
 const nodeResolve = require('rollup-plugin-node-resolve');
 const json = require('rollup-plugin-json');
 const rollup = require("rollup");
@@ -64,6 +66,8 @@ async function run() {
       }),
       commonjs({
       }),
+      globals(),
+      builtins(),
       http()
     ]
   });
