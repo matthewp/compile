@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+const fs = require('fs');
 const builtins = require('rollup-plugin-node-builtins');
 const commonjs = require('rollup-plugin-commonjs');
 const globals = require('rollup-plugin-node-globals');
@@ -72,11 +73,23 @@ async function run() {
     ]
   });
 
-  await bundle.write({
+  let outIsDir = false;
+  try {
+    outIsDir = fs.lstatSync(cli.flags.out).isDirectory();
+  } catch {}
+
+  let writeOptions = {
     format: outFormat,
     file: cli.flags.out,
     exports: 'named'
-  });
+  };
+
+  if(outIsDir) {
+    delete writeOptions.file;
+    writeOptions.dir = cli.flags.out;
+  }
+
+  await bundle.write(writeOptions);
 }
 
 function http() {
