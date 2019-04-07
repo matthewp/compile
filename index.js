@@ -22,6 +22,7 @@ const cli = meow(`
     --out,      -o Output file
     --format,   -f Format
     --external, -e Externals (comma separated)
+    --chunks,   -c Chunks (comma separated)
 `, {
   flags: {
     format: {
@@ -56,9 +57,19 @@ async function run() {
     externals.push.apply(externals, externalList.split(','));
   }
 
+  let chunks = void 0;
+  if(cli.flags.chunks) {
+    chunks = {};
+    cli.flags.chunks.split(',').forEach(chunk => {
+      let [name, entry] = chunk.split('=');
+      chunks[name] = [entry];
+    });
+  }
+
   let bundle = await rollup.rollup({
     input: cli.input[0],
     external: externals,
+    manualChunks: chunks,
     plugins: [
       json(),
       nodeResolve({
@@ -87,6 +98,10 @@ async function run() {
   if(outIsDir) {
     delete writeOptions.file;
     writeOptions.dir = cli.flags.out;
+
+    if(chunks) {
+      writeOptions.chunkFileNames = '[name].js';
+    }
   }
 
   await bundle.write(writeOptions);
