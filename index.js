@@ -24,6 +24,7 @@ const cli = meow(`
     --external, -e Externals (comma separated)
     --chunks,   -c Chunks (comma separated)
     --name,     -n Name (for UMD builds)
+    --exports,     Exports mode
 `, {
   flags: {
     format: {
@@ -97,7 +98,7 @@ async function run() {
   let writeOptions = {
     format: outFormat,
     file: cli.flags.out,
-    exports: 'named'
+    exports: cli.flags.exports || 'named'
   };
 
   if(cli.flags.name) {
