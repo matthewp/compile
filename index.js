@@ -23,16 +23,21 @@ const cli = meow(`
     --format,   -f Format
     --external, -e Externals (comma separated)
     --chunks,   -c Chunks (comma separated)
+    --name,     -n Name (for UMD builds)
 `, {
   flags: {
     format: {
       type: 'string',
-      alias: 'o'
+      alias: 'f'
     },
     out: {
       type: 'string',
       alias: 'o',
       default: process.cwd() + '/main.js'
+    },
+    name: {
+      type: 'string',
+      alias: 'n'
     }
   }
 });
@@ -94,6 +99,10 @@ async function run() {
     file: cli.flags.out,
     exports: 'named'
   };
+
+  if(cli.flags.name) {
+    writeOptions.name = cli.flags.name;
+  }
 
   if(outIsDir) {
     delete writeOptions.file;
