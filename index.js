@@ -4,6 +4,7 @@ const builtins = require('rollup-plugin-node-builtins');
 const commonjs = require('rollup-plugin-commonjs');
 const globals = require('rollup-plugin-node-globals');
 const nodeResolve = require('rollup-plugin-node-resolve');
+const string = require('rollup-plugin-string');
 const json = require('rollup-plugin-json');
 const rollup = require("rollup");
 const meow = require('meow');
@@ -40,6 +41,10 @@ const cli = meow(`
     name: {
       type: 'string',
       alias: 'n'
+    },
+    string: {
+      type: 'string',
+      alias: 's'
     }
   }
 });
