@@ -25,6 +25,7 @@ const cli = meow(`
     --chunks,   -c Chunks (comma separated)
     --name,     -n Name (for UMD builds)
     --exports,     Exports mode
+    --string,   -s File extensions to be strings (comma separated)
 `, {
   flags: {
     format: {
@@ -72,22 +73,30 @@ async function run() {
     });
   }
 
+  const plugins = [
+    json(),
+    nodeResolve({
+      jsnext: true,
+      main: true
+    }),
+    commonjs({}),
+    globals(),
+    builtins(),
+    http()
+  ];
+
+  if(cli.flags.string) {
+    // TODO Make this work with multiple.
+    plugins.unshift(string({
+      include: `**/*.${cli.flags.string}`
+    }));
+  }
+
   let bundle = await rollup.rollup({
     input: cli.input[0],
     external: externals,
     manualChunks: chunks,
-    plugins: [
-      json(),
-      nodeResolve({
-        jsnext: true,
-        main: true
-      }),
-      commonjs({
-      }),
-      globals(),
-      builtins(),
-      http()
-    ]
+    plugins
   });
 
   let outIsDir = false;
