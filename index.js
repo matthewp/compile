@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 const fs = require('fs');
-const builtins = require('rollup-plugin-node-builtins');
+const builtins = require('@joseph184/rollup-plugin-node-builtins');
 const commonjs = require('rollup-plugin-commonjs');
 const globals = require('rollup-plugin-node-globals');
 const nodeResolve = require('rollup-plugin-node-resolve');
