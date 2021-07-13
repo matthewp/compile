@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 const fs = require('fs');
 const builtins = require('@joseph184/rollup-plugin-node-builtins');
-const commonjs = require('rollup-plugin-commonjs');
+const commonjs = require('@rollup/plugin-commonjs');
 const globals = require('rollup-plugin-node-globals');
-const nodeResolve = require('rollup-plugin-node-resolve');
+const {nodeResolve} = require('@rollup/plugin-node-resolve');
 const string = require('rollup-plugin-string').string;
-const json = require('rollup-plugin-json');
+const json = require('@rollup/plugin-json');
 const rollup = require("rollup");
 const meow = require('meow');
 
