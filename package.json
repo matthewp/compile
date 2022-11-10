@@ -24,6 +24,6 @@
     "rollup-plugin-string": "^3.0.0"
   },
   "devDependencies": {
-    "mocha": "^5.2.0"
+    "mocha": "^10.1.0"
   }
 }
